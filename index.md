@@ -1,7 +1,8 @@
 ---
 layout: home
+title: Home
 ---
 
-# Welcome
+# Welcome!
 
-This is my personal website built with the minima theme.
+This is my site running minima 🎉
