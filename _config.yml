@@ -1,5 +1,14 @@
-title: My Website
-description: Welcome to my site!
-baseurl: "" # leave this empty for personal site
-url: "https://<your-username>.github.io"
-theme: minima
+title: Jennifer Mickel
+description: Neuroscience major at the University of Texas | Aspiring life sciences consultant
+baseurl: ""
+url: "https://jennifer-mickel.github.io"
+
+author:
+  name: Jennifer Mickel
+  email: jennifer.mickel@example.com
+  avatar: assets/img/profile.jpg
+
+social:
+  linkedin: jennifer-mickel
+  github: jennifer-mickel
+  twitter: jennmickel
