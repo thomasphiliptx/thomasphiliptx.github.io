@@ -1,0 +1,13 @@
+title: Your Name
+description: >- 
+  Welcome to my personal site!
+baseurl: "" # leave this empty for personal sites
+url: "https://<your-username>.github.io"
+theme: minima
+
+# Optional extras
+author:
+  name: Your Name
+  email: your@email.com
+
+show_excerpts: true
