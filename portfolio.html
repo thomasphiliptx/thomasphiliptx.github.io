@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio — NYC Transit</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700;900&family=Helvetica&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --line-1: #EE352E;
+            --line-2: #EE352E;
+            --line-4: #00933C;
+            --line-6: #00933C;
+            --line-7: #B933AD;
+            --line-a: #0039A6;
+            --line-l: #A7A9AC;
+            --black: #000000;
+            --white: #FFFFFF;
+            --yellow: #FCCC0A;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* Navigation - Subway Line Style */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--black);
+            border-bottom: 4px solid var(--yellow);
+            padding: 1.5rem 2rem;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .station-name {
+            font-size: 1.8rem;
+            font-weight: 900;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .line-selector {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .line-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            font-weight: 900;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            color: var(--white);
+            position: relative;
+        }
+
+        .line-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .line-btn::after {
+            content: attr(data-stop);
+            position: absolute;
+            bottom: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.65rem;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .line-btn:hover::after {
+            opacity: 1;
+        }
+
+        .line-d { background: #FF6319; }
+        .line-v { background: #00933C; }
+        .line-p { background: #B933AD; }
+        .line-t { background: #0039A6; }
+        .line-c { background: #A7A9AC; }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-top: 80px;
+            padding: 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 1000px;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 12vw, 9rem);
+            font-weight: 900;
+            line-height: 0.9;
+            margin-bottom: 1rem;
+            letter-spacing: -3px;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 300;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            opacity: 0.8;
+            animation: slideIn 0.8s ease-out 0.2s backwards;
+        }
+
+        .route-info {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.8rem 1.5rem;
+            font-weight: 900;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            animation: slideIn 0.8s ease-out 0.4s backwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Section Styling */
+        section {
+            min-height: 100vh;
+            padding: 6rem 2rem;
+            position: relative;
+            border-top: 2px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .line-indicator {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 6vw, 5rem);
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: -2px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .card:hover {
+            border-color: var(--accent);
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .card-meta {
+            font-size: 0.85rem;
+            opacity: 0.6;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .card-description {
+            line-height: 1.6;
+            opacity: 0.9;
+        }
+
+        /* Design Section */
+        #design {
+            background: linear-gradient(135deg, #1a0000 0%, #000000 100%);
+        }
+
+        #design .card {
+            --accent: var(--line-d);
+        }
+
+        /* Videography Section */
+        #videography {
+            background: linear-gradient(135deg, #001a00 0%, #000000 100%);
+        }
+
+        #videography .card {
+            --accent: var(--line-v);
+        }
+
+        /* Publications Section */
+        #publications {
+            background: linear-gradient(135deg, #1a001a 0%, #000000 100%);
+        }
+
+        #publications .card {
+            --accent: var(--line-p);
+        }
+
+        /* Talks Section */
+        #talks {
+            background: linear-gradient(135deg, #00001a 0%, #000000 100%);
+        }
+
+        #talks .card {
+            --accent: var(--line-t);
+        }
+
+        /* CV Section */
+        #cv {
+            background: linear-gradient(135deg, #1a1a1a 0%, #000000 100%);
+        }
+
+        #cv .card {
+            --accent: var(--line-c);
+        }
+
+        .cv-section {
+            margin-bottom: 3rem;
+        }
+
+        .cv-section h3 {
+            font-size: 1.8rem;
+            font-weight: 900;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: -0.5px;
+        }
+
+        .cv-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid var(--line-c);
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cv-item h4 {
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .cv-item .date {
+            opacity: 0.6;
+            font-size: 0.9rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Grid Background Pattern */
+        .grid-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            opacity: 0.5;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--black);
+            border-top: 4px solid var(--yellow);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        footer p {
+            font-weight: 700;
+            letter-spacing: 1px;
+            opacity: 0.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .line-selector {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="station-name">PORTFOLIO</div>
+        <div class="line-selector">
+            <button class="line-btn line-d" onclick="scrollToSection('design')" data-stop="DESIGN">D</button>
+            <button class="line-btn line-v" onclick="scrollToSection('videography')" data-stop="VIDEO">V</button>
+            <button class="line-btn line-p" onclick="scrollToSection('publications')" data-stop="PUBS">P</button>
+            <button class="line-btn line-t" onclick="scrollToSection('talks')" data-stop="TALKS">T</button>
+            <button class="line-btn line-c" onclick="scrollToSection('cv')" data-stop="CV">C</button>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="hero-content">
+            <h1>YOUR NAME</h1>
+            <div class="hero-subtitle">CREATIVE • DESIGNER • STORYTELLER</div>
+            <div class="route-info">
+                ⬇ ALL LINES RUNNING
+            </div>
+        </div>
+    </div>
+
+    <section id="design">
+        <div class="grid-bg"></div>
+        <div class="section-header">
+            <div class="line-indicator line-d">D</div>
+            <h2 class="section-title">Design</h2>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Project Title</div>
+                <div class="card-meta">Brand Identity • 2024</div>
+                <div class="card-description">
+                    A comprehensive brand identity system exploring the intersection of digital and physical design. Developed visual language, typography, and application guidelines.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Interface Design</div>
+                <div class="card-meta">UI/UX • 2024</div>
+                <div class="card-description">
+                    Mobile-first application design focusing on accessibility and user engagement. Created high-fidelity prototypes and conducted user testing.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Editorial Layout</div>
+                <div class="card-meta">Print Design • 2023</div>
+                <div class="card-description">
+                    Magazine spread design emphasizing experimental typography and grid systems. Balanced readability with visual impact.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="videography">
+        <div class="grid-bg"></div>
+        <div class="section-header">
+            <div class="line-indicator line-v">V</div>
+            <h2 class="section-title">Videography</h2>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Documentary Short</div>
+                <div class="card-meta">Director • 2024</div>
+                <div class="card-description">
+                    15-minute documentary exploring urban transformation. Shot on location across multiple cities, featuring interviews and cinematic b-roll.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Brand Video</div>
+                <div class="card-meta">Cinematographer • 2024</div>
+                <div class="card-description">
+                    Commercial video content for emerging tech startup. Managed full production pipeline from concept to color grading.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Experimental Film</div>
+                <div class="card-meta">Creator • 2023</div>
+                <div class="card-description">
+                    Abstract visual exploration of motion and time. Utilized practical effects and innovative editing techniques.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="publications">
+        <div class="grid-bg"></div>
+        <div class="section-header">
+            <div class="line-indicator line-p">P</div>
+            <h2 class="section-title">Publications</h2>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Research Paper Title</div>
+                <div class="card-meta">Journal Name • 2024</div>
+                <div class="card-description">
+                    Co-authored research examining the impact of digital interfaces on user behavior. Published in peer-reviewed academic journal.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Design Article</div>
+                <div class="card-meta">Online Publication • 2024</div>
+                <div class="card-description">
+                    Featured article discussing contemporary design trends and methodologies. Reached 10K+ readers across design community.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Conference Paper</div>
+                <div class="card-meta">ACM Conference • 2023</div>
+                <div class="card-description">
+                    Presented findings on human-computer interaction at international conference. Paper accepted for publication in proceedings.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="talks">
+        <div class="grid-bg"></div>
+        <div class="section-header">
+            <div class="line-indicator line-t">T</div>
+            <h2 class="section-title">Talks</h2>
+        </div>
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">Design Systems</div>
+                <div class="card-meta">Tech Conference • 2024</div>
+                <div class="card-description">
+                    45-minute presentation on building scalable design systems. Discussed component libraries, design tokens, and team collaboration.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Visual Storytelling</div>
+                <div class="card-meta">University Seminar • 2024</div>
+                <div class="card-description">
+                    Guest lecture exploring narrative techniques in video production. Interactive workshop with student filmmakers.
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">Creative Process</div>
+                <div class="card-meta">Design Meetup • 2023</div>
+                <div class="card-description">
+                    Lightning talk sharing personal creative methodology and project case studies. Engaged local design community.
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="cv">
+        <div class="grid-bg"></div>
+        <div class="section-header">
+            <div class="line-indicator line-c">C</div>
+            <h2 class="section-title">Curriculum Vitae</h2>
+        </div>
+        
+        <div class="cv-section">
+            <h3>Education</h3>
+            <div class="cv-item">
+                <h4>Bachelor of Arts in Design & Media</h4>
+                <div class="date">University Name • 2021 - Present</div>
+                <p>Concentration in Interactive Media and Visual Communication. Dean's List, GPA 3.8</p>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h3>Experience</h3>
+            <div class="cv-item">
+                <h4>Design Intern</h4>
+                <div class="date">Creative Agency • Summer 2024</div>
+                <p>Contributed to client projects across branding, web design, and motion graphics. Collaborated with senior designers on major campaigns.</p>
+            </div>
+            <div class="cv-item">
+                <h4>Videographer</h4>
+                <div class="date">Student Media Organization • 2022 - Present</div>
+                <p>Produce video content for campus events and initiatives. Manage equipment and mentor new team members.</p>
+            </div>
+        </div>
+
+        <div class="cv-section">
+            <h3>Skills</h3>
+            <div class="cv-item">
+                <p><strong>Design:</strong> Figma, Adobe Creative Suite, Sketch, Prototyping, Typography</p>
+                <p><strong>Video:</strong> Premiere Pro, After Effects, DaVinci Resolve, Cinematography</p>
+                <p><strong>Development:</strong> HTML/CSS, JavaScript, Basic React, Responsive Design</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>NEXT STOP → YOUR INBOX • CONTACT@EMAIL.COM</p>
+    </footer>
+
+    <script>
+        function scrollToSection(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Add scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s, transform 0.6s';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
